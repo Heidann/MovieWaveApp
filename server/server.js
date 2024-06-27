@@ -6,6 +6,7 @@ import UserRouter from "./Routes/UserRouter.js";
 import { errorHandler } from "./middlewares/errorMiddleWare.js";
 
 dotenv.config();
+``;
 
 const app = express();
 app.use(cors()); // to allow cross origin requests
