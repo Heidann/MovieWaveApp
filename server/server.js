@@ -3,10 +3,10 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
 import UserRouter from "./Routes/UserRouter.js";
+import MovieRouter from "./Routes/MoviesRouter.js";
 import { errorHandler } from "./middlewares/errorMiddleWare.js";
 
 dotenv.config();
-``;
 
 const app = express();
 app.use(cors()); // to allow cross origin requests
@@ -17,10 +17,8 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 // Main route
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
 app.use("/api/users", UserRouter);
+app.use("/api/movies", MovieRouter);
 
 // to handle errors in async routes
 app.use(errorHandler);

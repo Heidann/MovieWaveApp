@@ -171,55 +171,59 @@ const changeUserPassword = asyncHandler(async (req, res) => {
 // @route GET /api/users/favorite
 // @access Private
 const getLikedMovies = asyncHandler(async (req, res) => {
-  // find user in DB
-  const user = await User.findById(req.user._id);
-  // if user exits send user liked movies to client
-  if (user) {
-    // if not exists liked movies
-    // if (user.likedMovies.length === 0) {
-    //   res.status(404);
-    //   throw new Error("No liked movies found");
-    // }
-    // else send user liked movies to client
-    res.json(user.likedMovies);
-  }
-  // else send error message
-  else {
-    res.status(404);
-    throw new Error("User not found");
+  try {
+    // find user in DB
+    const user = await User.findById(req.user._id).populate("likedMovies");
+    // if user exits send user liked movies to client
+    if (user) {
+      // if not exists liked movies
+      // if (user.likedMovies.length === 0) {
+      //   res.status(404);
+      //   throw new Error("No liked movies found");
+      // }
+      // else send user liked movies to client
+      res.json(user.likedMovies);
+    }
+    // else send error message
+    else {
+      res.status(404);
+      throw new Error("User not found");
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 });
 
 // @decs Add movie to liked movies
 // @route GET /api/users/favorites
 // @access Private
-const addLikedMovie = asyncHandler(async (req, res) => {
+const addLikedMovies = asyncHandler(async (req, res) => {
   const { movieId } = req.body;
-  // find user in DB
-  const user = await User.findById(req.user._id);
-  // if user exits add movie to liked movies and save it in DB
-  if (user) {
-    // check if movie already liked
-    // if movie already liked send error message
-    if (user.likedMovies.includes(movieId)) {
-      res.status(400);
-      throw new Error("Movie already liked");
-    }
+  try {
+    // find user in DB
+    const user = await User.findById(req.user._id);
+    // if user exits add movie to liked movies and save it in DB
+    if (user) {
+      // check if movie already liked
+      // if movie already liked send error message
+      if (user.likedMovies.includes(movieId)) {
+        res.status(400);
+        throw new Error("Movie already liked");
+      }
+      // else add movie to liked movies and save it in DB
+      user.likedMovies.push(movieId);
+      await user.save();
+      // send user liked movies to client
 
-    // if movie already liked send error message
-    if (isMovieLiked) {
-      res.status(400);
-      throw new Error("Movie already liked");
+      res.json(user.likedMovies);
     }
-    // else add movie to liked movies and save it in DB
-    user.likedMovies.push(movieId);
-    await user.save();
-    res.json(user.likedMovies);
-  }
-  // else send error message
-  else {
-    res.status(404);
-    throw new Error("Movie not found");
+    // else send error message
+    else {
+      res.status(404);
+      throw new Error("Movie not found");
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 });
 
@@ -234,7 +238,7 @@ const deleteLikedMovies = asyncHandler(async (req, res) => {
     if (user) {
       user.likedMovies = [];
       await user.save();
-      res.json({ message: "All liked movies deleted successfully" });
+      res.json({ message: "Your favorite movies deleted successfully!" });
     }
     // else send error message
     else {
@@ -304,7 +308,7 @@ export {
   deleteUserProfile,
   changeUserPassword,
   getLikedMovies,
-  addLikedMovie,
+  addLikedMovies,
   deleteLikedMovies,
   getUsers,
   deleteUser,

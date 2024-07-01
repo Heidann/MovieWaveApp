@@ -6,7 +6,7 @@ import {
   deleteUserProfile,
   changeUserPassword,
   getLikedMovies,
-  addLikedMovie,
+  addLikedMovies,
   deleteLikedMovies,
   getUsers,
   deleteUser,
@@ -23,7 +23,7 @@ router.put("/", protect, updateUserProfile);
 router.delete("/", protect, deleteUserProfile);
 router.put("/password", protect, changeUserPassword);
 router.get("/favorites", protect, getLikedMovies);
-router.get("/favorites", protect, addLikedMovie);
+router.post("/favorites", protect, addLikedMovies);
 router.delete("/favorites", protect, deleteLikedMovies);
 
 //********** ADMIN ROUTES ********//

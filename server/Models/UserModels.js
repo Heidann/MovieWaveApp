@@ -25,10 +25,12 @@ const UserSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    likedMovies: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Movie",
-    },
+    likedMovies: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Movies",
+      },
+    ],
   },
   {
     timestamps: true, // this will add createdAt and updatedAt
