@@ -32,7 +32,7 @@ const getMovies = asyncHandler(async (req, res) => {
     };
     //  load more movies functionality
     const page = Number(req.query.pageNumber) || 1; // if pageNumber is not provided in query we set it to 1
-    const limit = 2; // 2 movies per page
+    const limit = 4; // quantity movies per page
     const skip = (page - 1) * limit; // skip movies by page number
 
     // find movies by query , skip and limit
@@ -246,6 +246,20 @@ const deleteMovie = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Delete all movie
+// @route DELETE /api/movies
+// @access Private/Admin
+const deleteAllMovies = asyncHandler(async (req, res) => {
+  try {
+    // delete all movies from the database
+    await Movie.deleteMany({});
+    // send message to the client
+    res.status(201).json({ message: "All movies deleted successfully" });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 export {
   importMovies,
   getMovies,
@@ -255,4 +269,5 @@ export {
   createMovieReview,
   updateMovie,
   deleteMovie,
+  deleteAllMovies,
 };
