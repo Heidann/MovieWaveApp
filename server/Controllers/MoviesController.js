@@ -165,6 +165,62 @@ const createMovieReview = asyncHandler(async (req, res) => {
   }
 });
 
+//***** ADMIN CONTROLLERS *****/
+// @desc Update movie
+// @route PUT /api/movies/:id
+// @access Private/Admin
+const updateMovie = asyncHandler(async (req, res) => {
+  const {
+    name,
+    desc,
+    image,
+    titleImage,
+    rate,
+    numberOfReviews,
+    category,
+    time,
+    language,
+    year,
+    video,
+    casts,
+  } = req.body;
+  try {
+    // find movie by id
+    const movie = await Movie.findById(req.params.id);
+    // if the movie is found
+    if (movie) {
+      // update movie data
+      movie.name = name || movie.name;
+      movie.desc = desc || movie.desc;
+      movie.image = image || movie.image;
+      movie.titleImage = titleImage || movie.titleImage;
+      movie.rate = rate || movie.rate;
+      movie.numberOfReviews = numberOfReviews || movie.numberOfReviews;
+      movie.category = category || movie.category;
+      movie.time = time || movie.time;
+      movie.language = language || movie.language;
+      movie.year = year || movie.year;
+      movie.video = video || movie.video;
+      movie.casts = casts || movie.casts;
+
+      // save movie in the database
+      const updatedMovie = await movie.save();
+
+      // send the update movie to the client
+      res
+        .status(201)
+        .json({ message: "Movie updated successfully" }, { updatedMovie });
+
+      // if the movie is not found send 404 error message
+    } else {
+      res.status(404);
+      throw new Error("Movie not found");
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 export {
   importMovies,
   getMovies,
@@ -172,4 +228,5 @@ export {
   getTopRatedMovies,
   getRandomMovies,
   createMovieReview,
+  updateMovie,
 };
