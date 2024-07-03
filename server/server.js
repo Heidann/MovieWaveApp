@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
 import UserRouter from "./Routes/UserRouter.js";
 import MovieRouter from "./Routes/MoviesRouter.js";
+import CategoryRouter from "./Routes/CategoriesRouter.js";
 import { errorHandler } from "./middlewares/errorMiddleWare.js";
 
 dotenv.config();
@@ -19,6 +20,7 @@ connectDB();
 // Main route
 app.use("/api/users", UserRouter);
 app.use("/api/movies", MovieRouter);
+app.use("/api/categories", CategoryRouter);
 
 // to handle errors in async routes
 app.use(errorHandler);
