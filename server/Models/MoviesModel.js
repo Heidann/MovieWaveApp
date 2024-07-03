@@ -3,31 +3,31 @@ const reviewSchema = mongoose.Schema(
   {
     userName: {
       type: String,
-      required: [true, "Please add a name"],
+      required: true,
     },
     userImage: {
       type: String,
-      required: [true, "Please add an image"],
+      // required: true,
     },
     rating: {
       type: String,
-      required: [true, "Please add a rating"],
+      required: true,
     },
     comment: {
       type: String,
-      required: [true, "Please add a comment"],
+      required: true,
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: [true, "Please add a user"],
+      required: true,
     },
   },
   {
     timestamps: true,
   }
 );
-const moviesSchema = new mongoose.Schema(
+const moviesSchema = mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -84,11 +84,11 @@ const moviesSchema = new mongoose.Schema(
       {
         name: {
           type: String,
-          required: [true, "Please add a name"],
+          // required: [true, "Please add a name"],
         },
         image: {
           type: String,
-          required: [true, "Please add an image"],
+          // required: [true, "Please add an image"],
         },
       },
     ],

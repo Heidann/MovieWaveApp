@@ -1,7 +1,9 @@
 import asyncHandler from "express-async-handler"; // to handle errors in async routes
 import Movie from "../Models/MoviesModel.js";
 import { MoviesData } from "../Data/MovieData.js";
+
 //***** PUBLIC CONTROLLERS *****/
+
 // @decs import movies
 // @route POST /api/movies/import
 // @access Public
@@ -103,10 +105,71 @@ const getRandomMovies = asyncHandler(async (req, res) => {
   }
 });
 
+//***** PRIVATE CONTROLLERS *****/
+
+// @desc Create movie review
+// @route POST /api/movies/:id/reviews
+// @access Private
+const createMovieReview = asyncHandler(async (req, res) => {
+  const { rating, comment } = req.body;
+  try {
+    // find movie by id
+    const movie = await Movie.findById(req.params.id);
+
+    // if the movie is found
+    if (movie) {
+      // check if user already reviewed this movie
+      const alreadyReviewed = await movie.reviews.find(
+        (review) => review.userId.toString() === req.user._id.toString()
+      );
+
+      // if the user already reviewed this movie send 400 error
+      if (alreadyReviewed) {
+        res.status(400);
+        throw new Error("User already reviewed this movie");
+      }
+      // else create new review
+      const review = {
+        userId: req.user._id,
+        userName: req.user.fullName,
+        userImage: req.body.image,
+        rating: Number(rating),
+        comment,
+      };
+
+      // push the new review to the review array
+      movie.reviews.push(review);
+
+      // increment the number of reviews
+      movie.numberOfReviews = movie.reviews.length;
+
+      // calculate the new rate
+      movie.rate =
+        movie.reviews.reduce((acc, item) => item.rating + acc, 0) /
+        movie.reviews.length;
+
+      // save movie in the database
+      await movie.save();
+
+      // send movie to the client
+      res.status(201).json({ message: "Review added successfully" }, { movie });
+    }
+
+    // if the movie is not found send 404 error message
+    else {
+      res.status(404);
+      throw new Error("Movie not found");
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 export {
   importMovies,
   getMovies,
   getMovieById,
   getTopRatedMovies,
   getRandomMovies,
+  createMovieReview,
 };
