@@ -166,6 +166,7 @@ const createMovieReview = asyncHandler(async (req, res) => {
 });
 
 //***** ADMIN CONTROLLERS *****/
+
 // @desc Update movie
 // @route PUT /api/movies/:id
 // @access Private/Admin
@@ -221,6 +222,30 @@ const updateMovie = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Delete movie
+// @route DELETE /api/movies/:id
+// @access Private/Admin
+const deleteMovie = asyncHandler(async (req, res) => {
+  try {
+    // find movie by id and delete it
+    const movie = await Movie.findById(req.params.id);
+    // if the movie is found and delete it
+    if (movie) {
+      // delete movie from the database
+      await movie.deleteOne();
+      // send message to the client
+      res.status(201).json({ message: "Movie deleted successfully" });
+    }
+    // if the movie is not found send 404 error message
+    else {
+      res.status(404);
+      throw new Error("Movie not found");
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 export {
   importMovies,
   getMovies,
@@ -229,4 +254,5 @@ export {
   getRandomMovies,
   createMovieReview,
   updateMovie,
+  deleteMovie,
 };

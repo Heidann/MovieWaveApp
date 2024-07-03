@@ -118,7 +118,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 const deleteUserProfile = asyncHandler(async (req, res) => {
   try {
     // find user in DB
-    const user = await User.findOneAndDelete(req.user._id);
+    const user = await User.findById(req.user._id);
     // if user exits delete user from DB
     if (user) {
       // if user id admin, throw error message
@@ -127,7 +127,7 @@ const deleteUserProfile = asyncHandler(async (req, res) => {
         throw new Error("Can't delete admin user!");
       }
       // else delete user from DB
-      // await user.remove();
+      await user.deleteOne();
       res.json({ message: "User deleted successfully!" });
     }
     // else send error message
@@ -279,7 +279,7 @@ const getUsers = asyncHandler(async (req, res) => {
 const deleteUser = asyncHandler(async (req, res) => {
   try {
     // find user in DB
-    const user = await User.findOneAndDelete(req.params.id);
+    const user = await User.findById(req.params.id);
     // if user exits delete user from DB
     if (user) {
       // if user id admin, throw error message
@@ -288,7 +288,7 @@ const deleteUser = asyncHandler(async (req, res) => {
         throw new Error("Can't delete admin user!");
       }
       // else delete user from DB
-      // await user.remove();
+      await user.deleteOne();
       res.json({ message: "User deleted successfully!" });
     }
     // else send error message
