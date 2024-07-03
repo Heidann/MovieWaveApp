@@ -260,6 +260,57 @@ const deleteAllMovies = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Create movie
+// @route POST /api/movies
+// @access Private/Admin
+const createMovie = asyncHandler(async (req, res) => {
+  const {
+    name,
+    desc,
+    image,
+    titleImage,
+    rate,
+    numberOfReviews,
+    category,
+    time,
+    language,
+    year,
+    video,
+    casts,
+  } = req.body;
+  try {
+    // create a new movie
+    const movie = new Movie({
+      userId: req.user._id,
+      name,
+      desc,
+      image,
+      titleImage,
+      rate,
+      numberOfReviews,
+      category,
+      time,
+      language,
+      year,
+      video,
+      casts,
+    });
+
+    // save movie in the database
+    if (movie) {
+      const createdMovie = await movie.save();
+      res.status(201).json(createdMovie);
+    } else {
+      res.status(400);
+      throw new Error("Invalid movie data");
+    }
+
+    // send the created movie to the client
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 export {
   importMovies,
   getMovies,
@@ -270,4 +321,5 @@ export {
   updateMovie,
   deleteMovie,
   deleteAllMovies,
+  createMovie,
 };
