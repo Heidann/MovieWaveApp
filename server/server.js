@@ -6,7 +6,7 @@ import UserRouter from "./Routes/UserRouter.js";
 import MovieRouter from "./Routes/MoviesRouter.js";
 import CategoryRouter from "./Routes/CategoriesRouter.js";
 import { errorHandler } from "./middlewares/errorMiddleWare.js";
-
+import Uploadrouter from "./Controllers/UploadFile.js";
 dotenv.config();
 
 const app = express();
@@ -21,6 +21,7 @@ connectDB();
 app.use("/api/users", UserRouter);
 app.use("/api/movies", MovieRouter);
 app.use("/api/categories", CategoryRouter);
+app.use("/api/upload", Uploadrouter);
 
 // to handle errors in async routes
 app.use(errorHandler);
